@@ -124,17 +124,78 @@ gcloud run services update ${SERVICE_NAME} \
 
 ## Option 3: Using Cloud Build (CI/CD)
 
-1. **Enable Cloud Build API:**
+### Quick Start
+
+1. **Set up secrets:**
    ```bash
-   gcloud services enable cloudbuild.googleapis.com
+   ./setup-gcp-secrets.sh
    ```
 
-2. **Submit build:**
+2. **Configure Cloud Build service account:**
    ```bash
-   gcloud builds submit --config cloudbuild.yaml
+   ./setup-cloud-build-sa.sh
    ```
 
-   Or set up a trigger for automatic deployments on git push.
+3. **Create GitHub connection** (one-time setup):
+   - Go to [Cloud Build → Connections](https://console.cloud.google.com/cloud-build/connections)
+   - Create GitHub connection and authorize
+
+4. **Create Cloud Build trigger:**
+   ```bash
+   ./setup-cicd-trigger.sh [github-owner] [github-repo] [project-id] [branch]
+   ```
+   
+   Example:
+   ```bash
+   ./setup-cicd-trigger.sh myusername tstc-slack-bot appier-airis-tstc master
+   ```
+
+5. **Grant secret access:**
+   ```bash
+   ./grant-secret-access.sh tstc-slack-bot us-central1
+   ```
+
+6. **Push to trigger deployment:**
+   ```bash
+   git push origin master
+   ```
+
+### Manual Build
+
+If you want to trigger a build manually:
+
+```bash
+# Enable Cloud Build API
+gcloud services enable cloudbuild.googleapis.com
+
+# Submit build
+gcloud builds submit --config cloudbuild.yaml --project=appier-airis-tstc
+```
+
+### Testing Build Configuration
+
+Test your `cloudbuild.yaml` before setting up triggers:
+
+```bash
+./test-cloudbuild.sh
+```
+
+### Monitoring Builds
+
+```bash
+# List recent builds
+gcloud builds list --project=appier-airis-tstc --limit=10
+
+# View build logs
+gcloud builds log [BUILD_ID] --project=appier-airis-tstc
+
+# Stream live logs
+gcloud builds log --stream --project=appier-airis-tstc
+```
+
+### Detailed CI/CD Documentation
+
+For complete CI/CD setup instructions, see [CICD_SETUP.md](./CICD_SETUP.md).
 
 ## Configuration
 

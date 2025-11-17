@@ -16,8 +16,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY slack/src/ ./slack/src/
-COPY . .
+# Note: .dockerignore will exclude playground/, docs, etc.
+COPY slack/ ./slack/
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
