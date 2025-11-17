@@ -19,6 +19,11 @@ env/
 .env.local
 *.env
 
+# Service account keys
+*-key.json
+*service-account*.json
+*.json.key
+
 # IDE
 .vscode/
 .idea/
